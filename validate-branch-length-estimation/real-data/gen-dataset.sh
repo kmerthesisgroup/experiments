@@ -16,4 +16,5 @@ do
 	./run.sh seven-primates $i $NUM_SAMPLE
 	cp original_topology-seven-primates-$i-$NUM_SAMPLE/final_tree.txt $DEST_DIR/seven-primates-$i-$NUM_SAMPLE-tree.txt
 	cp original_topology-seven-primates-$i-$NUM_SAMPLE/final_species_file.txt $DEST_DIR/seven-primates-$i-$NUM_SAMPLE-species.txt
+	cp seven-primates-$i-$NUM_SAMPLE/entropy.txt $DEST_DIR/seven-primates-$i-$NUM_SAMPLE-entropy.txt
 done
