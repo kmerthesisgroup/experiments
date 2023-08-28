@@ -1,0 +1,24 @@
+seed: 0
+
+branch-length-distribution:
+  uniform:
+    lower: 0.1
+    upper: 0.9
+
+lambda:
+  uniform:
+    lower: 0
+    upper: 1
+mu:
+  uniform:
+    lower: 0
+    upper: 10
+
+m:
+  uniform:
+    lower: 0
+    upper: 1
+
+number-of-species: 10
+number-of-sites: 1200
+number-of-samples: 10
