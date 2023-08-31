@@ -19,6 +19,7 @@ $(DATASET):
 	mkdir -p $(DATASET)
 	mkdir -p fasta_dir
 	docker run -v ./$(DATASET):/workspace/$(SPECIES)/dest -v ./generate-dataset.py:/generate-dataset.py -v ./fasta_dir:/workspace/$(SPECIES)/data  -w /workspace/$(SPECIES)/ --rm kmerthssgrp/generate-kmer-count-matrix python3 /generate-dataset.py --species $(SPECIES) --klower $(KLOWER) --khigher $(KHIGHER) --sample-lower $(SAMPLE_LOWER) --sample-higher $(SAMPLE_HIGHER)
+	docker run -v $(CURDIR):/workspace -w /workspace --rm ubuntu:jammy-20230804 bash -c "apt update && apt install -y curl && ./generate-random-tree.sh"
 
 trees: $(OPTIMIZED_TREES)
 
