@@ -4,9 +4,10 @@ set -xe
 DATASET=dataset
 GENERATE_RANDOM_TREE=generate-random-tree-linux-amd64
 RANDOM_TREE_CONF=random-tree.conf
-RANDOM_TREE=$DATASET/random_topology-tree.txt
-
 ORIGINAL_TREE=$(ls $DATASET/original_topology*)
+ORIGINAL_TREE_SUFFIX=${ORIGINAL_TREE#$DATASET/original_topology-}
+RANDOM_TREE=$DATASET/random_topology-$ORIGINAL_TREE_SUFFIX
+
 LOWER=0.1
 UPPER=10
 
