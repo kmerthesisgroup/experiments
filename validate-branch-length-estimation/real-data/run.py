@@ -45,7 +45,10 @@ def estimate_parameters(tree):
 
 def get_likelihood(tree):
     Q = fpruner.gen_censored_linear_bdps_qmat(tree.lamda, tree.m, tree.mu, get_max_kmer_count(tree))
-    pruner = fpruner.FelsensteinPruner(tree, qmat=Q)
+    lnpi = bpe.gen_ln_pi_array(tree.lamda, tree.m/tree.lamda, get_max_kmer_count(tree))
+    pi = np.e**lnpi
+    pi = pi/np.sum(pi)
+    pruner = fpruner.FelsensteinPruner(tree, qmat=Q, pi=pi)
     return pruner.compute_log_likelihood(0, recompute_table=True)
 
 def draw_trees(tree_original, tree, tree_filename):
