@@ -12,6 +12,8 @@ import felsenstein_pruner as fpruner
 import branch_length_estimator as ble
 import bdps_parameter_estimator as bpe
 
+
+from functools import lru_cache
 from Bio import Phylo
 
 np.random.seed(0)
@@ -29,9 +31,15 @@ EPRECISSION=np.float32(0.001)
 LPRECISSION=np.float32(0.01)
 MIN_MAX_KMER_COUNT=20
 MAX_MAX_KMER_COUNT=40
+CUT_OFF_PI=10**-8
 
+@lru_cache
 def get_max_kmer_count(tree):
-    return max(min(np.max(tree.kmer_count)*2, MAX_MAX_KMER_COUNT), MIN_MAX_KMER_COUNT)
+    Q = fpruner.gen_censored_linear_bdps_qmat(tree.lamda, tree.m, tree.mu, MAX_MAX_KMER_COUNT)
+    lnpi = bpe.gen_ln_pi_array(tree.lamda, tree.m/tree.lamda, MAX_MAX_KMER_COUNT)
+    pi = np.e**lnpi
+    pi = pi/np.sum(pi)
+    return np.argwhere(pi>CUT_OFF_PI)[-1, 0]
 
 def estimate_parameters(tree):
     ds = bpe.get_dataset(tree)
@@ -45,7 +53,10 @@ def estimate_parameters(tree):
 
 def get_likelihood(tree):
     Q = fpruner.gen_censored_linear_bdps_qmat(tree.lamda, tree.m, tree.mu, get_max_kmer_count(tree))
-    pruner = fpruner.FelsensteinPruner(tree, qmat=Q)
+    lnpi = bpe.gen_ln_pi_array(tree.lamda, tree.m/tree.lamda, get_max_kmer_count(tree))
+    pi = np.e**lnpi
+    pi = pi/np.sum(pi)
+    pruner = fpruner.FelsensteinPruner(tree, qmat=Q, pi=pi)
     return pruner.compute_log_likelihood(0, recompute_table=True)
 
 def draw_trees(tree_original, tree, tree_filename):
