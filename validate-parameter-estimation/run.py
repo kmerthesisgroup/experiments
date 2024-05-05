@@ -15,8 +15,8 @@ np.random.seed(0)
 
 RESULTS_DIR = 'result'
 DATASET_DIR = 'dataset'
-LAMBDA_BY_MU_IMAGE = f'{RESULTS_DIR}/lambda-by-mu-estimated-vs-original.png'
-M_BY_MU_IMAGE = f'{RESULTS_DIR}/m-by-mu-estimated-vs-original.png'
+LAMBDA_BY_MU_IMAGE = f'{RESULTS_DIR}/lambda-by-mu-estimated-vs-original'
+M_BY_MU_IMAGE = f'{RESULTS_DIR}/m-by-mu-estimated-vs-original'
 CORREF_FILE =  f'{RESULTS_DIR}/corref.yaml'
 
 
@@ -73,13 +73,14 @@ def draw_lambda_by_mu_curve(df):
     plt.title("estimated vs original values of $\dfrac{\lambda}{\mu}$",fontsize=20)
 
     print('Saving lambda/mu image')
-    plt.savefig(LAMBDA_BY_MU_IMAGE)
+    plt.savefig(f'{LAMBDA_BY_MU_IMAGE}.png')
+    plt.savefig(f'{LAMBDA_BY_MU_IMAGE}.eps', format='eps')
     print('Done')
 
 
 def draw_m_by_mu_curve(df):
     #removing outlier (result still stands, it's just is really big and makes plot lose details)
-    df = df[df['m']/df['mu'] < 20] 
+    df = df[df['m']/df['mu'] < 20]
     m_orig = df['m']/df['mu']
     m_est = df['coeff_{m/mu}']
 
@@ -97,7 +98,8 @@ def draw_m_by_mu_curve(df):
 
 
     print('Saving m/mu image')
-    plt.savefig(M_BY_MU_IMAGE)
+    plt.savefig(f'{M_BY_MU_IMAGE}.png')
+    plt.savefig(f'{M_BY_MU_IMAGE}.eps', format='eps')
     print('Done')
 
 
@@ -114,7 +116,7 @@ def generate_correlation_coefficients_file(df):
 
     with open(CORREF_FILE, 'w') as file:
         yaml.dump(results, file, default_flow_style=False)
-    
+
     print('Correlation Coefficients:')
     print(yaml.dump(results, default_flow_style=False))
 
@@ -132,12 +134,12 @@ def main():
 
     for file in tree_files:
         print(file, flush=True)
-        
+
         entry = process_tree(file,only_leaves=False)
         df_parameters = df_parameters.append(entry, ignore_index=True)
         print(entry, flush=True)
-    
-    
+
+
 
     draw_lambda_by_mu_curve(df_parameters)
     draw_m_by_mu_curve(df_parameters)
