@@ -65,8 +65,8 @@ def draw_trees(tree_original, tree, tree_filename):
     axs[0].set_ylabel('taxa', fontsize=16)
 
     file_name = os.path.basename(tree_filename).split('.')[0]
-    
-    plt.savefig(f'{RESULT_DIR}/{file_name}.png')
+
+    plt.savefig(f'{RESULT_DIR}/{file_name}.eps', format='eps')
 
 def process_tree(tree_file, species_file):
     tree_original = pt.load_from_file(tree_file, only_leaves=True)
@@ -78,25 +78,25 @@ def process_tree(tree_file, species_file):
         tree.update_branch_length(i,np.random.rand()*5)
 
     result = dict()
-    
+
     estimate_parameters(tree)
     result['random_tree_likelihood'] = float(get_likelihood(tree))
     result['random_tree_bldk'] = float(pt.bldk(tree_original, tree, pt.find_optimal_K(tree_original,tree)))
 
     file_name = os.path.basename(tree_file).split('.')[0]
     max_kmer_count = get_max_kmer_count(tree)
-    print('max kmer count: ', max_kmer_count) 
-    ble.estimate_branch_length(tree, LOWER, UPPER, max_kmer_count, num_passes=NUM_PASSES, seed_tree=True, 
+    print('max kmer count: ', max_kmer_count)
+    ble.estimate_branch_length(tree, LOWER, UPPER, max_kmer_count, num_passes=NUM_PASSES, seed_tree=True,
                                eprecisson=EPRECISSION, lprecisson=LPRECISSION,logfile=f'{LOG_DIR}/{file_name}')
 
     result['estimated_tree_likelihood'] = float(get_likelihood(tree))
     result['estimated_tree_bldk'] = float(pt.bldk(tree_original, tree, pt.find_optimal_K(tree_original,tree)))
     draw_trees(tree_original, tree, tree_file)
-    
+
     print(result)
     with open(f'{RESULT_DIR}/{file_name}.yaml', 'w') as fp:
         yaml.dump(result, fp, default_flow_style=False)
-    
+
     return result
 
 def get_datasets(dataset_dir):
