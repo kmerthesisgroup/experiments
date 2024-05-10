@@ -52,21 +52,38 @@ def get_likelihood(tree):
     return pruner.compute_log_likelihood(0, recompute_table=True)
 
 def draw_trees(tree_original, tree, tree_filename):
-    fig , axs = plt.subplots(2, 1, figsize=(8, 12), sharex=True,
-                          sharey=True)
-    pt.draw_tree(tree, axs[1])
-    axs[1].set_title('Estimated Tree for Seven Primates Dataset', fontsize=20)
-    axs[1].set_xlabel('branch length', fontsize=16)
-    axs[1].set_ylabel('taxa', fontsize=16)
-
-    pt.draw_tree(tree_original, axs[0])
-    axs[0].set_title('Original Tree for Seven Primates Dataset',fontsize=20)
-    axs[0].set_xlabel('branch length', fontsize=16)
-    axs[0].set_ylabel('taxa', fontsize=16)
-
     file_name = os.path.basename(tree_filename).split('.')[0]
 
-    plt.savefig(f'{RESULT_DIR}/{file_name}.eps', format='eps')
+    estimated, axis_estimated = plt.subplots(1, 1, figsize=(8, 6))
+    pt.draw_tree(tree, axis_estimated)
+    axis_estimated.set_title('Estimated Branch Lengths for Seven Primates Dataset', fontsize=18)
+    axis_estimated.set_xlabel('branch length', fontsize=16)
+    axis_estimated.set_ylabel('taxa', fontsize=16)
+
+    original, axis_original = plt.subplots(1, 1, figsize=(8, 6))
+    pt.draw_tree(tree_original, axis_original)
+    axis_original.set_title('Original Branch Lengths for Seven Primates Dataset',fontsize=18)
+    axis_original.set_xlabel('branch length', fontsize=16)
+    axis_original.set_ylabel('taxa', fontsize=16)
+
+    estimated_xlims = axis_estimated.get_xlim()
+    original_xlims = axis_original.get_xlim()
+    xlims = (min(estimated_xlims[0], original_xlims[0]), max(estimated_xlims[1], original_xlims[1]))
+
+    estimated_ylims = axis_estimated.get_ylim()
+    original_ylims = axis_original.get_ylim()
+    ylims = (min(estimated_ylims[0], original_ylims[0]), max(estimated_ylims[1], original_ylims[1]))
+
+    axis_estimated.set_xlim(xlims[0], xlims[1])
+    axis_estimated.set_ylim(ylims[0], ylims[1])
+
+    axis_original.set_xlim(xlims[0], xlims[1])
+    axis_original.set_ylim(ylims[0], ylims[1])
+
+    estimated.savefig(f'{RESULT_DIR}/{file_name}-estimated.eps', format='eps')
+    estimated.savefig(f'{RESULT_DIR}/{file_name}-estimated.png')
+    original.savefig(f'{RESULT_DIR}/{file_name}-original.eps', format='eps')
+    original.savefig(f'{RESULT_DIR}/{file_name}-original.png')
 
 def process_tree(tree_file, species_file):
     tree_original = pt.load_from_file(tree_file, only_leaves=True)
