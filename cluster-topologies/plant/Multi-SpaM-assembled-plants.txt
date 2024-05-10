@@ -1,0 +1,1 @@
+(Vitis_vinifera,((Carica_papaya,((((Arabidopsis_thaliana,Arabidopsis_lyrata),Capsella_rubella),((Eutrema_parvulum,Brassica_rapa),Eutrema_halophilum)),((Theobroma_cacao,Gossypium_raimondii),(Citrus_sinensis,Citrus_clementina)))),(Eucalyptus_grandis,Eucalyptus_camaldulensis)));
