@@ -16,5 +16,5 @@ make result
 # Artifacts
 - `tree.yaml`
 - `tree-estimated.eps`
-- Optimized tree (at `result/{filename}-{final-iteration}.tree`)
+- Optimized tree (at `log/{filename}-{final-iteration}.tree`)
   
